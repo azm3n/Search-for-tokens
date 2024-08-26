@@ -5,7 +5,7 @@ type Props = {
   token: Token
 }
 
-const TokenField: FC<Props> = ({
+const TokenTile: FC<Props> = ({
   token: {name, ticker, icon, change, price, plusIcon},
 }) => {
   return (
@@ -53,4 +53,4 @@ const TokenField: FC<Props> = ({
   )
 }
 
-export default TokenField
+export default TokenTile

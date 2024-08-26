@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Navigation, TokenField} from './components'
+import {TokensList, Navigation} from './components'
 import {generateTokens} from './utils'
 import {Token} from './interfaces'
 import LoupeIcon from './assets/loupe.svg'
@@ -8,6 +8,9 @@ const App = () => {
   const [tokenNumber, setTokenNumber] = useState(0)
   const [tokens, setTokens] = useState<Token[]>([])
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([])
+  const [loadedTokens, setLoadedTokens] = useState(20)
+
+  console.log({loadedTokens})
 
   return (
     <div className='flex h-full w-full flex-col items-center justify-center gap-9 bg-gray-500'>
@@ -19,7 +22,7 @@ const App = () => {
               className='py block h-10 w-full rounded-md border border-[#2B344D] bg-[#040407] py-2.25 pl-2 pr-8 text-sm text-[#F7F7F7] placeholder-[#7685A0] outline-none focus:focus:ring-1 focus:ring-[#2B344D] focus:ring-opacity-50'
               placeholder='Search'
               required
-              onChange={e =>
+              onChange={e => {
                 setFilteredTokens(
                   tokens.filter(
                     token =>
@@ -31,7 +34,8 @@ const App = () => {
                         .includes(e.target.value.toLocaleLowerCase()),
                   ),
                 )
-              }
+                setLoadedTokens(20)
+              }}
             />
             <span className='absolute inset-y-0 right-0 flex items-center pr-2'>
               <button>
@@ -39,11 +43,11 @@ const App = () => {
               </button>
             </span>
           </div>
-          <div className='flex h-full w-full flex-col gap-1 overflow-y-scroll'>
-            {filteredTokens.slice(0, 20).map(token => (
-              <TokenField token={token} key={token.id} />
-            ))}
-          </div>
+          <TokensList
+            tokens={filteredTokens}
+            loadedTokens={loadedTokens}
+            setLoadedTokens={setLoadedTokens}
+          />
         </div>
       </div>
       <div className='flex flex-col gap-4'>
@@ -60,6 +64,7 @@ const App = () => {
             const tokens = generateTokens(tokenNumber)
             setTokens(tokens)
             setFilteredTokens(tokens)
+            setLoadedTokens(20)
           }}
         >
           Generate tokens
